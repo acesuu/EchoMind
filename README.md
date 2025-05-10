@@ -1,30 +1,47 @@
-EchoMind
-========
+# EchoMind
 
-A real-time voice-based meeting companion in pure Python. It can:
+Real-time voice-based meeting companion in pure Python (no Docker).
 
-- Join virtual calls
+EchoMind can:
+- Join virtual calls (via selectable audio device loopback)
 - Transcribe speech (STT)
 - Summarize and analyze conversations using LLMs (LangChain / Hugging Face)
 - Answer follow-up questions about past meetings (LangGraph memory + LangSmith observability)
-- Speak its answers back (TTS via Cartesia)
-- Provide a monitoring dashboard (Grafana + Telemetry)
+- Speak answers back (TTS via Cartesia)
+- Provide a monitoring dashboard (Prometheus metrics + Grafana)
 
-Status: Early prototype.
+## Status
+Initial scaffolding. See roadmap in commit history.
 
-Quick start
------------
-1) Create and activate a Python 3.10+ virtual environment.
-2) Install requirements: `pip install -r requirements.txt`
-3) Copy `.env.example` to `.env` and fill your keys as needed.
-4) Run the CLI: `python -m echomind.cli --help`
+## Quickstart
+1) Create and activate a virtual environment
+```
+python -m venv .venv
+.venv\\Scripts\\activate
+```
+2) Install dependencies
+```
+pip install -r requirements.txt
+```
+3) Copy env and edit
+```
+copy .env.example .env
+```
+4) Run EchoMind CLI (transcribe + summarize)
+```
+python -m echomind.app --device \"default\" --session \"demo-session\"
+```
+5) Start metrics server
+```
+python -m echomind.telemetry.server
+```
 
-Monitoring
-----------
-EchoMind exposes Prometheus metrics locally. Grafana dashboards are provided under `grafana/`.
+Grafana dashboard and setup located in `grafana/`.
 
-License
--------
-MIT © EchoMind contributors
+## Remote
+This repo targets the remote origin `https://github.com/acesuu/EchoMind.git`.
+
+## License
+MIT
 
 
