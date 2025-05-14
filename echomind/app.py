@@ -8,6 +8,7 @@ from rich.console import Console
 from rich.panel import Panel
 
 from echomind.config import settings
+from echomind.audio import list_input_devices, AudioCapture
 
 
 app = typer.Typer(add_completion=False)
@@ -38,11 +39,21 @@ def run(
 
 
 async def _main_loop(device: str, session: str, summarize_every_s: int) -> None:
-    # Placeholder: later we will integrate capture → STT → LLM → memory → TTS
-    while True:
-        console.print("[dim]Listening... (stub)[/dim]")
-        await asyncio.sleep(summarize_every_s)
-        console.print("[green]Summary (stub):[/green] Meeting continues smoothly.")
+    # Audio warmup: open the device and read a few frames to ensure it works
+    with AudioCapture(device_name=device) as cap:
+        console.print(f"[dim]Opened audio device: {device} at {settings.sample_rate_hz} Hz[/dim]")
+        # consume a few blocks
+        for _ in range(3):
+            _ = next(cap.frames())
+        # Placeholder loop
+        while True:
+            console.print("[dim]Listening... (stub)[/dim]")
+            # pull a handful of frames to simulate activity
+            for _ in range(10):
+                _ = next(cap.frames())
+                await asyncio.sleep(0)
+            await asyncio.sleep(summarize_every_s)
+            console.print("[green]Summary (stub):[/green] Meeting continues smoothly.")
 
 
 if __name__ == "__main__":
