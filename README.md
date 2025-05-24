@@ -1,6 +1,6 @@
 # EchoMind
 
-Real-time voice-based meeting companion in pure Python (no Docker).
+Real-time voice-based meeting companion in pure Python.
 
 EchoMind can:
 - Join virtual calls (via selectable audio device loopback)
@@ -38,8 +38,6 @@ python -m echomind.telemetry.server
 
 Grafana dashboard and setup located in `grafana/`.
 
-## Remote
-This repo targets the remote origin `https://github.com/acesuu/EchoMind.git`.
 
 ## License
 MIT
