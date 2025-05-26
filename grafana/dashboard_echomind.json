@@ -1,0 +1,30 @@
+{
+  "title": "EchoMind Overview",
+  "timezone": "browser",
+  "panels": [
+    {
+      "type": "stat",
+      "title": "Audio Frames",
+      "targets": [
+        { "expr": "sum(echomind_meeting_frames_total)" }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "STT Segments",
+      "targets": [
+        { "expr": "sum(echomind_stt_segments_total)" }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Summaries",
+      "targets": [
+        { "expr": "sum(echomind_meeting_summaries_total)" }
+      ]
+    }
+  ],
+  "version": 1
+}
+
+
