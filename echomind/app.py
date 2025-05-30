@@ -17,6 +17,18 @@ console = Console()
 
 
 @app.command()
+def ask(question: str = typer.Argument(..., help="Ask a question about past meetings")):
+    """
+    Ask a follow-up question grounded in memory of past meetings.
+    """
+    from echomind.qa import MeetingQA
+
+    qa = MeetingQA()
+    answer = qa.ask(question)
+    console.print(Panel(answer, title="Answer", border_style="cyan"))
+
+
+@app.command()
 def run(
     device: str = typer.Option(settings.input_device, help="Audio input device name or 'default'"),
     session: str = typer.Option("session-1", help="Meeting session id"),
