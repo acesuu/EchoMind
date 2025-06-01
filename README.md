@@ -42,6 +42,10 @@ Grafana dashboard and setup located in `grafana/`.
 - Import `grafana/dashboard_echomind.json` into your Grafana instance.
 - Add a Prometheus datasource pointing to your Prometheus server scraping EchoMind's metrics endpoint (default: `http://127.0.0.1:9108/metrics`).
 
+## Tests
+```
+pytest -q
+```
 
 ## License
 MIT
