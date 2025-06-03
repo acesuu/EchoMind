@@ -1,6 +1,6 @@
 # EchoMind
 
-Real-time voice-based meeting companion in pure Python.
+Real-time voice-based meeting companion in pure Python (no Docker).
 
 EchoMind can:
 - Join virtual calls (via selectable audio device loopback)
@@ -37,6 +37,20 @@ python -m echomind.telemetry.server
 ```
 
 Grafana dashboard and setup located in `grafana/`.
+
+## Capabilities
+- Join virtual calls by selecting a loopback/system input device (e.g., “Stereo Mix”)
+- Continuous transcription with Whisper (faster-whisper)
+- Periodic summarization via LangChain (OpenAI/HF)
+- Memory for cross-meeting Q&A via FAISS + LangGraph-style flow and LangSmith observability
+- Optional TTS via Cartesia to speak summaries/answers
+
+## Environment
+See `.env.example` for all variables. Minimum:
+```
+OPENAI_API_KEY=...
+# or HUGGINGFACEHUB_API_TOKEN=...
+```
 
 ## Grafana
 - Import `grafana/dashboard_echomind.json` into your Grafana instance.
