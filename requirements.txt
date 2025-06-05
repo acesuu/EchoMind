@@ -1,15 +1,19 @@
 sounddevice==0.4.7
-numpy>=1.26.0,<2.0.0
+# Use NumPy wheels on Python 3.13 to avoid source builds
+numpy>=2.1.2; python_version >= "3.13"
+numpy>=1.26.0,<2.0.0; python_version < "3.13"
 faster-whisper==1.0.0
 ffmpeg-python==0.2.0
 soundfile==0.12.1
 langchain==0.3.3
 langgraph==0.2.34
 langsmith==0.1.130
-faiss-cpu==1.7.4
+# Replace FAISS with ChromaDB for Windows/Python 3.13 compatibility
+chromadb==0.5.5
 sentence-transformers==3.1.1
 transformers==4.44.2
-torch>=2.3.0
+# Torch version with wide wheel availability; adjust if CUDA needed
+torch==2.5.1
 prometheus-client==0.20.0
 fastapi==0.115.0
 uvicorn==0.30.6

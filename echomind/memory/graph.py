@@ -3,9 +3,9 @@ from __future__ import annotations
 import os
 from typing import List, Optional
 
-import faiss
-from langchain.vectorstores import FAISS
-from langchain.embeddings import HuggingFaceEmbeddings
+import chromadb
+from chromadb.config import Settings as ChromaSettings
+from chromadb.utils.embedding_functions import SentenceTransformerEmbeddingFunction
 from langsmith import Client as LangSmithClient
 
 from echomind.config import settings
@@ -15,25 +15,26 @@ class MeetingMemory:
     def __init__(self, vector_dir: Optional[str] = None):
         self.vector_dir = vector_dir or settings.vector_dir
         os.makedirs(self.vector_dir, exist_ok=True)
-        self.embed = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
-        self.store = None  # lazy
+        self.embed_fn = SentenceTransformerEmbeddingFunction(model_name="sentence-transformers/all-MiniLM-L6-v2")
+        self._client: Optional[chromadb.PersistentClient] = None
+        self._collection = None
         self.langsmith = LangSmithClient(api_key=settings.langsmith_api_key) if settings.langsmith_api_key else None
 
     def _load_or_create(self) -> None:
-        if self.store is not None:
-            return
-        index_path = os.path.join(self.vector_dir, "index.faiss")
-        if os.path.exists(index_path):
-            self.store = FAISS.load_local(self.vector_dir, self.embed, allow_dangerous_deserialization=True)
-        else:
-            self.store = FAISS.from_texts(texts=[], embedding=self.embed)
-            self.store.save_local(self.vector_dir)
+        if self._client is None:
+            self._client = chromadb.PersistentClient(path=self.vector_dir, settings=ChromaSettings(allow_reset=False))
+        if self._collection is None:
+            name = "echomind_memory"
+            existing = [c.name for c in self._client.list_collections()]
+            if name in existing:
+                self._collection = self._client.get_collection(name=name, embedding_function=self.embed_fn)
+            else:
+                self._collection = self._client.create_collection(name=name, embedding_function=self.embed_fn)
 
     def add_transcript(self, session_id: str, text: str) -> None:
         self._load_or_create()
         meta = {"session_id": session_id}
-        self.store.add_texts([text], [meta])
-        self.store.save_local(self.vector_dir)
+        self._collection.add(documents=[text], metadatas=[meta], ids=[f"{session_id}-{abs(hash(text))}"])
         if self.langsmith:
             self.langsmith.create_feedback(
                 run_id=None,
@@ -46,7 +47,8 @@ class MeetingMemory:
 
     def search(self, query: str, k: int = 5) -> List[str]:
         self._load_or_create()
-        docs = self.store.similarity_search(query, k=k)
-        return [d.page_content for d in docs]
+        res = self._collection.query(query_texts=[query], n_results=k)
+        docs = res.get("documents", [[]])[0]
+        return list(docs)
 
 
