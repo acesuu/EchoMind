@@ -12,8 +12,9 @@ langsmith==0.1.130
 chromadb==0.5.5
 sentence-transformers==3.1.1
 transformers==4.44.2
-# Torch version with wide wheel availability; adjust if CUDA needed
-torch==2.5.1
+# Torch: choose versions available for Python 3.13
+torch==2.9.0; python_version >= "3.13"
+torch>=2.3.0,<2.9.0; python_version < "3.13"
 prometheus-client==0.20.0
 fastapi==0.115.0
 uvicorn==0.30.6
