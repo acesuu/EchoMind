@@ -18,6 +18,7 @@ class Settings:
     block_size: int = int(os.getenv("ECHO_BLOCK_SIZE") or "2048")
 
     # STT
+    stt_provider: str = os.getenv("ECHO_STT_PROVIDER") or "local"  # local | openai
     whisper_model: str = os.getenv("ECHO_WHISPER_MODEL") or "medium"
     whisper_compute_type: str = os.getenv("ECHO_WHISPER_COMPUTE") or "auto"
 

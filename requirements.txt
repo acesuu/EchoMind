@@ -2,7 +2,8 @@ sounddevice==0.4.7
 # Use NumPy wheels on Python 3.13 to avoid source builds
 numpy>=2.1.2; python_version >= "3.13"
 numpy>=1.26.0,<2.0.0; python_version < "3.13"
-faster-whisper==1.0.0
+# Local STT only on Python < 3.13 to avoid tokenizers build
+faster-whisper==1.0.0; python_version < "3.13"
 ffmpeg-python==0.2.0
 soundfile==0.12.1
 langchain==0.3.3
@@ -10,11 +11,11 @@ langgraph==0.2.34
 langsmith==0.1.130
 # Replace FAISS with ChromaDB for Windows/Python 3.13 compatibility
 chromadb==0.5.5
-sentence-transformers==3.1.1
-# Transformers/Tokenizers: ensure wheels on Python 3.13 to avoid Rust build
-transformers==4.46.2; python_version >= "3.13"
-tokenizers==0.20.1; python_version >= "3.13"
+# Embeddings and LLMs: prefer OpenAI path on 3.13 to avoid tokenizers
+openai==1.51.0; python_version >= "3.13"
+sentence-transformers==3.1.1; python_version < "3.13"
 transformers==4.44.2; python_version < "3.13"
+tokenizers<0.16,>=0.13; python_version < "3.13"
 # Torch: choose versions available for Python 3.13
 torch==2.9.0; python_version >= "3.13"
 torch>=2.3.0,<2.9.0; python_version < "3.13"

@@ -7,10 +7,11 @@ from typing import Deque, Optional
 import numpy as np
 
 from echomind.audio import AudioCapture
-from echomind.stt import WhisperTranscriber
+from echomind.stt import WhisperTranscriber, OpenAITranscriber
 from echomind.llm import ConversationSummarizer
 from echomind.memory import MeetingMemory
 from echomind.telemetry import MEETING_FRAMES, STT_SEGMENTS, MEETING_SUMMARIES
+from echomind.config import settings
 
 
 class MeetingAgent:
@@ -18,7 +19,10 @@ class MeetingAgent:
         self.device = device
         self.session_id = session_id
         self.cap = AudioCapture(device_name=device)
-        self.stt = WhisperTranscriber()
+        if settings.stt_provider == "openai":
+            self.stt = OpenAITranscriber()
+        else:
+            self.stt = WhisperTranscriber()
         self.summarizer = ConversationSummarizer()
         self.memory = MeetingMemory()
         self.buffer: Deque[np.ndarray] = deque(maxlen=50)  # sliding window

@@ -1,5 +1,8 @@
-from .transcriber import WhisperTranscriber, TranscriptionSegment
+from .transcriber import WhisperTranscriber, TranscriptionSegment as LocalTranscriptionSegment  # type: ignore
+from .openai_stt import OpenAITranscriber, TranscriptionSegment as OpenAITranscriptionSegment  # type: ignore
 
-__all__ = ["WhisperTranscriber", "TranscriptionSegment"]
+TranscriptionSegment = LocalTranscriptionSegment  # alias
+
+__all__ = ["WhisperTranscriber", "OpenAITranscriber", "TranscriptionSegment"]
 
 
